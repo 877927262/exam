@@ -1,0 +1,211 @@
+<div class="editingarea">
+    <div class="c_flex"><span class="c_flexible"></span></div>
+    <div class="c_editview">
+        <div class="c_condition">
+            <span><select><option>题干</option></select></span>
+            <span class="pl5 " ><input type="text"></span>
+            <span class="pl15 pr15 btn_gray ">查找</span>
+            <span class="icon_lead-in"><em class="icon_r">批量导入题目</em></span>
+            <span class="icon_add"><em class="icon_r">单个添加题目</em></span>
+        </div>
+        <div class="divtable">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablea">
+                <!-- <tr>
+                    <td align="center">年份</td>
+                    <td align="left">
+                        <div class="chose"><a href="#" class="active3">全部</a><a href="#">语文</a><a href="#">数学</a><a href="#">英语</a><a href="#">政治</a></div>
+                    </td>
+                </tr> -->
+            </table>
+        </div>
+           <div class="Catalog">
+               
+               <div class="Catalog_right">
+                   <div class="Catalogtitle">总计<em>15552</em>道题&nbsp;&nbsp;提示：单击体面可显示答案和解析&nbsp;&nbsp;<input type="checkbox" /><b>显示答案和解析</b>&nbsp;&nbsp;<a href="#" class="Thispage">本页全部试题加入试卷</a><div><i>1</i><a href="#" class="pageone">前</a><a href="#" class="pagetwo">后</a></div></div>
+                   <!-- <div class="Catalog_rightnei">
+                        <div class="Catalogtitwo">题号：25544&nbsp;&nbsp;题型：还是得&nbsp;&nbsp;难度：订餐&nbsp;&nbsp;上传人：女性司机&nbsp;&nbsp;来源：才能使得&nbsp;&nbsp;上传时间:220255&nbsp;&nbsp;组卷次数：<em>0</em></div>
+                        <div class="Catalogcontent">
+                            <div class="Catalogcontentup">题型<br></div>
+                            <div class="Catalogcontentdown"><a href="#">审核通过</a><a href="#">审核不通过</a><a href="#">删除题目</a></div>
+                        </div>
+                   </div> -->
+                   
+               </div>
+               <div class="clear"></div>
+           </div>
+    </div>
+</div>
+<script>
+    $(function(){    
+        $.getJSON('http://127.0.0.1:3000/exam/manager/getAllSubjectType',function(data){
+            var as="";
+            data.forEach(function(item,index){
+                if(index==0){
+                    as+='<a href="#" class="active3" SubjectTypeid="'+item.id+'">'+item.realName+'</a>';
+                }
+                else{
+                    as+='<a href="#" SubjectTypeid="'+item.id+'">'+item.realName+'</a>';   
+                }
+            })
+            var tr = '<tr name="SubjectType">'
+                        +'<td align="center">类型</td>'
+                        +'<td align="left">'
+                            +'<div class="chose">'
+                            +as
+                            +'</div>'
+                        +'</td>'
+                    +'</tr>';
+            $('table').append(tr);
+        }) 
+        $.getJSON('http://127.0.0.1:3000/exam/manager/getAllSubjectLevel',function(data){
+            var as="";
+            data.forEach(function(item,index){
+                if(index==0){
+                    as+='<a href="#" class="active3" SubjectLevelid="'+item.id+'">'+item.realName+'</a>';
+                }
+                else{
+                    as+='<a href="#" SubjectLevelid="'+item.id+'">'+item.realName+'</a>';   
+                }
+            })
+            var tr = '<tr name="SubjectLevel">'
+                        +'<td align="center">难易程度</td>'
+                        +'<td align="left">'
+                            +'<div class="chose">'
+                            +as
+                            +'</div>'
+                        +'</td>'
+                    +'</tr>';
+            $('table').append(tr);
+        }) 
+        $.getJSON('http://127.0.0.1:3000/exam/manager/getAllDepartmentes',function(data){
+            var as="";
+            data.forEach(function(item,index){
+                if(index==0){
+                    as+='<a href="#" class="active3" Departmentesid="'+item.id+'">'+item.name+'</a>';
+                }
+                else{
+                    as+='<a href="#" Departmentesid="'+item.id+'">'+item.name+'</a>';   
+                }
+            })
+            var tr = '<tr name="Departmentes">'
+                        +'<td align="center">方向</td>'
+                        +'<td align="left">'
+                            +'<div class="chose">'
+                            +as
+                            +'</div>'
+                        +'</td>'
+                    +'</tr>';
+            $('table').append(tr);
+        }) 
+        $.getJSON('http://127.0.0.1:3000/exam/manager/getAllTopics',function(data){
+            var as="";
+            data.forEach(function(item,index){
+                if(index==0){
+                    as+='<a href="#" class="active3" Topicsid="'+item.id+'">'+item.title+'</a>';
+                }
+                else{
+                    as+='<a href="#" Topicsid="'+item.id+'">'+item.title+'</a>';   
+                }
+            })
+            var tr = '<tr name="Topics">'
+                        +'<td align="center">知识点</td>'
+                        +'<td align="left">'
+                            +'<div class="chose">'
+                            +as
+                            +'</div>'
+                        +'</td>'
+                    +'</tr>';
+            $('table').append(tr);
+        })  
+        
+        
+        //点击每一个选项，改变显示效果，并且发送ajax请求（使用事件代理）
+        $('table').on('click','a',function(){
+            $('.Catalogtitle ~ div').remove();
+            $(this).addClass('active3').siblings().removeClass("active3");
+
+            var active3=$('.active3');
+            //根据选项，显示所选的题目
+            function getSubjectId(handler){
+                    $.getJSON("http://127.0.0.1:3000/exam/manager/showSubject",{
+                    //department_id
+                    //subjectType_id
+                    subjectType_id:active3.eq(0).attr("SubjectTypeid"),
+                    subjectLevel_id:active3.eq(1).attr("SubjectLevelid"),
+                    department_id:active3.eq(2).attr("Departmentesid"),
+                    topic_id:active3.eq(3).attr("Topicsid")
+                },function(data){
+                    data.forEach(function(item,index){
+                        var stem = item.stem;
+                        var subjectid = item.id;
+
+                        //创建每一条数据的容器，并且将数据塞进去
+                        var Catalog_rightnei='<div class="Catalog_rightnei">'
+                        +'<div class="Catalogtitwo">题号：25544&nbsp;&nbsp;题型：还是得&nbsp;&nbsp;难度：订餐&nbsp;&nbsp;上传人：女性司机&nbsp;&nbsp;来源：才能使得&nbsp;&nbsp;上传时间:220255&nbsp;&nbsp;组卷次数：<em>0</em></div>'
+                        +'<div class="Catalogcontent">'
+                          +'<div class="Catalogcontentup">题型<br></div>'
+                          +'<div class="Catalogcontentdown"><a href="#">审核通过</a><a href="#">审核不通过</a><a href="#">删除题目</a></div>'
+                        +'</div>'
+                   +'</div>';
+                        //将这个容器添加到页面上
+                        $('.Catalog_right').append(Catalog_rightnei);
+
+                        //将题目追加到空白处
+                        $('.Catalogcontentup').eq(index).empty().append('题型：'+stem);
+                        //给通过审核和不通过审核，以及删除题目按钮添加属性，属性值为题目的id
+                        $('.Catalogcontentdown').eq(index).find('a').attr("check",subjectid);
+
+                        //给按钮绑定事件
+                        //点击审核通过按钮，通过审核
+                        $('.Catalogcontentdown a:nth-of-type(1)').on('click',function(){
+                            var parent=$(this).parent();
+                            var id=$(this).attr("check");
+                            // console.log(id);
+                            $.getJSON("http://127.0.0.1:3000/exam/manager/checked",{id:id},function(){
+                                parent.empty();
+                                parent.append('<a href="#">加入试卷</a>');
+
+                            })
+                        })
+                        //点击审核不通过，不通过审核
+                        $('.Catalogcontentdown a:nth-of-type(2)').on('click',function(){
+                            var id=$(this).attr("check");
+                            $.getJSON("http://127.0.0.1:3000/exam/manager/unchecked",{id:id},function(){
+
+                            })
+                        })
+
+
+                        handler(subjectid,index);
+
+                    })
+
+                })
+            }
+
+            //根据题目显示答案
+            getSubjectId(function(subjectid,ind){
+                // console.log(subjectid);
+                $.getJSON("http://127.0.0.1:3000/exam/manager/showAnswer",{
+                        subjectid:subjectid
+                    },function(data){
+                        data.forEach(function(item,index){
+                            // console.log(item.correct.data[0]);
+                            if(item.correct.data[0]==0){
+                                $('.Catalogcontentup').eq(ind).append("<br/><span>"+String.fromCharCode(item.id+64)+":"+item.content+"</span>" );
+
+                            }
+                            else{
+                                $('.Catalogcontentup').eq(ind).append("<br/><span style='color:red'>"+String.fromCharCode(item.id+64)+":"+item.content+"</span>");
+                            }
+                        })
+                })
+            });
+
+            
+        })
+
+        
+        
+    })
+</script>
