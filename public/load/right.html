@@ -6,7 +6,7 @@
             <span class="pl5 " ><input type="text"></span>
             <span class="pl15 pr15 btn_gray ">查找</span>
             <span class="icon_lead-in"><em class="icon_r">批量导入题目</em></span>
-            <span class="icon_add"><em class="icon_r">单个添加题目</em></span>
+            <span class="icon_add"><em class="icon_r"><a href="../zy/1-3添加题目-单选题.html">单个添加题目</a></em></span>
         </div>
         <div class="divtable">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablea">
@@ -19,7 +19,7 @@
             </table>
         </div>
            <div class="Catalog">
-               
+
                <div class="Catalog_right">
                    <div class="Catalogtitle">总计<em>15552</em>道题&nbsp;&nbsp;提示：单击体面可显示答案和解析&nbsp;&nbsp;<input type="checkbox" /><b>显示答案和解析</b>&nbsp;&nbsp;<a href="#" class="Thispage">本页全部试题加入试卷</a><div><i>1</i><a href="#" class="pageone">前</a><a href="#" class="pagetwo">后</a></div></div>
                    <!-- <div class="Catalog_rightnei">
@@ -29,14 +29,14 @@
                             <div class="Catalogcontentdown"><a href="#">审核通过</a><a href="#">审核不通过</a><a href="#">删除题目</a></div>
                         </div>
                    </div> -->
-                   
+
                </div>
                <div class="clear"></div>
            </div>
     </div>
 </div>
 <script>
-    $(function(){    
+    $(function(){
         $.getJSON('http://127.0.0.1:3000/exam/manager/getAllSubjectType',function(data){
             var as="";
             data.forEach(function(item,index){
@@ -44,7 +44,7 @@
                     as+='<a href="#" class="active3" SubjectTypeid="'+item.id+'">'+item.realName+'</a>';
                 }
                 else{
-                    as+='<a href="#" SubjectTypeid="'+item.id+'">'+item.realName+'</a>';   
+                    as+='<a href="#" SubjectTypeid="'+item.id+'">'+item.realName+'</a>';
                 }
             })
             var tr = '<tr name="SubjectType">'
@@ -56,7 +56,7 @@
                         +'</td>'
                     +'</tr>';
             $('table').append(tr);
-        }) 
+        })
         $.getJSON('http://127.0.0.1:3000/exam/manager/getAllSubjectLevel',function(data){
             var as="";
             data.forEach(function(item,index){
@@ -64,7 +64,7 @@
                     as+='<a href="#" class="active3" SubjectLevelid="'+item.id+'">'+item.realName+'</a>';
                 }
                 else{
-                    as+='<a href="#" SubjectLevelid="'+item.id+'">'+item.realName+'</a>';   
+                    as+='<a href="#" SubjectLevelid="'+item.id+'">'+item.realName+'</a>';
                 }
             })
             var tr = '<tr name="SubjectLevel">'
@@ -76,7 +76,7 @@
                         +'</td>'
                     +'</tr>';
             $('table').append(tr);
-        }) 
+        })
         $.getJSON('http://127.0.0.1:3000/exam/manager/getAllDepartmentes',function(data){
             var as="";
             data.forEach(function(item,index){
@@ -84,7 +84,7 @@
                     as+='<a href="#" class="active3" Departmentesid="'+item.id+'">'+item.name+'</a>';
                 }
                 else{
-                    as+='<a href="#" Departmentesid="'+item.id+'">'+item.name+'</a>';   
+                    as+='<a href="#" Departmentesid="'+item.id+'">'+item.name+'</a>';
                 }
             })
             var tr = '<tr name="Departmentes">'
@@ -96,7 +96,7 @@
                         +'</td>'
                     +'</tr>';
             $('table').append(tr);
-        }) 
+        })
         $.getJSON('http://127.0.0.1:3000/exam/manager/getAllTopics',function(data){
             var as="";
             data.forEach(function(item,index){
@@ -104,7 +104,7 @@
                     as+='<a href="#" class="active3" Topicsid="'+item.id+'">'+item.title+'</a>';
                 }
                 else{
-                    as+='<a href="#" Topicsid="'+item.id+'">'+item.title+'</a>';   
+                    as+='<a href="#" Topicsid="'+item.id+'">'+item.title+'</a>';
                 }
             })
             var tr = '<tr name="Topics">'
@@ -116,9 +116,9 @@
                         +'</td>'
                     +'</tr>';
             $('table').append(tr);
-        })  
-        
-        
+        })
+
+
         //点击每一个选项，改变显示效果，并且发送ajax请求（使用事件代理）
         $('table').on('click','a',function(){
             $('.Catalogtitle ~ div').remove();
@@ -126,14 +126,13 @@
 
             var active3=$('.active3');
             //根据选项，显示所选的题目
+
             function getSubjectId(handler){
                     $.getJSON("http://127.0.0.1:3000/exam/manager/showSubject",{
-                    //department_id
-                    //subjectType_id
-                    subjectType_id:active3.eq(0).attr("SubjectTypeid"),
-                    subjectLevel_id:active3.eq(1).attr("SubjectLevelid"),
-                    department_id:active3.eq(2).attr("Departmentesid"),
-                    topic_id:active3.eq(3).attr("Topicsid")
+                      subjectType_id:$('tr[name=SubjectType] a.active3').attr("SubjectTypeid"),
+                      subjectLevel_id:$('tr[name=SubjectLevel] a.active3').attr("SubjectLevelid"),
+                      department_id:$('tr[name=Departmentes] a.active3').attr("Departmentesid"),
+                      topic_id:$('tr[name=Topics] a.active3').attr("Topicsid"),
                 },function(data){
                     data.forEach(function(item,index){
                         var stem = item.stem;
@@ -202,10 +201,10 @@
                 })
             });
 
-            
-        })
 
-        
-        
+        })
+        //点击单个添加按钮，加载添加页面
+
+
     })
 </script>

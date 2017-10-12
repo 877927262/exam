@@ -9,9 +9,89 @@
 <link rel="stylesheet" type="text/css" href="../theme/1/css/table.css">
 <link rel="stylesheet" type="text/css" href="../theme/1/css/icon.css">
 <link rel="stylesheet" type="text/css" href="../theme/1/css/zy.css">
-<script type="text/javascript" src="../js/jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
-<script type="text/javascript"  src="../theme/1/js/base.js"></script>
+<script type="text/javascript" src="../jquery-2.1.4/jquery.min.js"></script>
+<script>
+	$(function(){
+		//发送四条请求，将下拉菜单显示到屏幕上
+		//获取类型
+		function getAllSubjectType(handler){
+			$.getJSON('http://127.0.0.1:3000/exam/manager/getAllSubjectType',function(data){
+				var opts="";
+				data.forEach(function(item,index){
+					opts+='<option value="'+item.id+'">'+item.realName+'</option>'
+				})
+				var select='<span>类型</span>'
+								+'<select name="subjectType">'
+									+opts
+								+'</select>';
+				$('.opts').append(select);
+				handler();
+			})
+		}
+		// 获取难易程度
+		function getAllSubjectLevel(handler){
+			$.getJSON('http://127.0.0.1:3000/exam/manager/getAllSubjectLevel',function(data){
+				var opts="";
+				data.forEach(function(item,index){
+					opts+='<option value="'+item.id+'">'+item.realName+'</option>'
+				})
+				var select='<span>难易程度</span>'
+							+'<select name="subjectLevel">'
+								+opts
+							+'</select>';
+				$('.opts').append(select);
+				handler();
+			})
+		}
+		// 获取方向
+		function getAllDepartmentes(handler){
+			$.getJSON('http://127.0.0.1:3000/exam/manager/getAllDepartmentes',function(data){
+				var opts="";
+				data.forEach(function(item,index){
+						opts+='<option value="'+item.id+'">'+item.name+'</option>'
+				})
+				var select='<span>方向</span>'
+										+'<select name="departmente">'
+											+opts
+										+'</select>';
+				$('.opts').append(select);
+				handler();
+			})
+		}
+		// 获取知识点
+		function getAllTopics(handler){
+			$.getJSON('http://127.0.0.1:3000/exam/manager/getAllTopics',function(data){
+				var opts="";
+				data.forEach(function(item,index){
+						opts+='<option value="'+item.id+'">'+item.title+'</option>'
+				})
+				var select='<span>知识点</span>'
+								+'<select name="topics">'
+									+opts
+								+'</select>';
+				$('.opts').append(select);
+				handler();
+			})
+		}
+
+		//执行上述4个方法
+		getAllSubjectType(function(){
+			$('select[name="subjectType"]').on('change',function(){
+				console.log($(this).val());
+			})
+		});
+		getAllSubjectLevel(function(){});
+		getAllDepartmentes(function(){});
+		getAllTopics(function(){});
+
+
+
+
+
+
+
+	})
+</script>
 </head>
 
 <body>
@@ -53,7 +133,7 @@
                             <li><a href="#">考试安排</a></li>
                         </ul>
                     </li>
-                   
+
                 </ul>
             </div>
             <div class="right">
@@ -61,10 +141,19 @@
                     <div class="c_flex"><span class="c_flexible"></span></div>
                     <div class="Topictitle">添加题目</div>
                 	<div class="c_editview">
+												<!--这个div中存放多个题目的选项-->
+												<div class="opts">
+														<!-- <span>类型</span>
+														<select name="subjectType">
+															<option value="">单选题</option>
+															<option value="">多选题</option>
+															<option value="">简答题</option>
+														</select> -->
+												</div>
                         <div class="Problem">
                             <div class="Attributetit">题目题干</div>
                             <div class="Problemcontent">
-                                
+
                             </div>
                         </div>
                         <div class="Answeroptions">
