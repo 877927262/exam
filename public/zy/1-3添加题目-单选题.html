@@ -74,15 +74,84 @@
 			})
 		}
 
-		//执行上述4个方法
+	//执行上述4个方法
 		getAllSubjectType(function(){
 			$('select[name="subjectType"]').on('change',function(){
-				console.log($(this).val());
+				//当点击复选框的时候，将下方的单选框改为复选框
+				if($(this).val()==2){
+					$('input[type="radio"]').attr("type","checkbox");
+					$('.Answercontent').css("display","block");
+				//当点击单选框的时候，将下方的复选框改为单选框
+				}else if($(this).val()==1){
+					$('input[type="checkbox"]').attr("type","radio");
+					$('.Answercontent').css("display","block");
+				// 当点击简答的时候，将下方的复选框单选框移除
+				}else {
+					$('.Answercontent').css("display","none");
+				}
+
 			})
 		});
 		getAllSubjectLevel(function(){});
 		getAllDepartmentes(function(){});
 		getAllTopics(function(){});
+		var choiceCorrect="";
+		//当点击保存并继续按钮时，通过ajax发送数据
+		$('.btn_left .btnL').on('click',function(){
+			choiceCorrect=[0,0,0,0];
+			if($('.Answerpart input').attr("type")=="radio"){
+				var radio_val = $('input[name="question"]:checked').val();
+				choiceCorrect[radio_val]=1;
+
+			}
+			else {
+				$('input[name="question"]:checked').each(function(index,item){
+					// console.log(item.value);
+					choiceCorrect[item.value]=1;
+				});
+			}
+
+			var subjectDatas={
+				subjectTypeId:$('select[name="subjectType"]').val(),
+				subjectLevelId:$('select[name="subjectLevel"]').val(),
+				departmentId:$('select[name="departmente"]').val(),
+				topicId:$('select[name="topics"]').val(),
+				stem:$('textarea[name="question_bank"]').val(),
+				answer:$('textarea[name="question_answer"]').val()
+			}
+
+
+			$.ajax({
+				url : "http://127.0.0.1:3000/exam/manager/saveSubject",
+				method : "post",
+				data :JSON.stringify(subjectDatas) ,
+				contentType : "application/json",
+				success : function(data){
+					var answerDatas={
+						choiceContent: [
+											$('.Answercontent textarea').eq(0).val(),
+											$('.Answercontent textarea').eq(1).val(),
+											$('.Answercontent textarea').eq(2).val(),
+											$('.Answercontent textarea').eq(3).val()
+										],
+						choiceCorrect:choiceCorrect,
+						subject_id:data.insertId
+
+					}
+					$.ajax({
+						url : "http://127.0.0.1:3000/exam/manager/saveAnswer",
+						method : "post",
+						data :JSON.stringify(answerDatas) ,
+						contentType : "application/json",
+						success : function(data){
+							location.reload();
+						}
+					})
+				}
+			});
+
+		})
+
 
 
 
@@ -153,7 +222,8 @@
                         <div class="Problem">
                             <div class="Attributetit">题目题干</div>
                             <div class="Problemcontent">
-
+								<!-- 增加一个文本域 -->
+								<textarea name="question_bank" rows="4" cols="80"></textarea>
                             </div>
                         </div>
                         <div class="Answeroptions">
@@ -162,30 +232,38 @@
                             <div class="Answercontent">
                                   <div class="Answerpart">
                                      <div class="Answerpart_left">
-                                         <p>A</p><span><input type="radio" /></span>
+                                         <p>A</p><span><input type="radio" name="question" value="0"/></span>
                                      </div>
-                                     <div class="Answerpart_right"></div>
+                                     <div class="Answerpart_right">
+                                     	<textarea name="name" rows="5" cols="45"></textarea>
+                                     </div>
                                      <div class="clear"></div>
                                   </div>
                                 <div class="Answerpart">
                                     <div class="Answerpart_left">
-                                        <p>B</p><span><input type="radio" /></span>
+                                        <p>B</p><span><input type="radio" name="question" value="1"/></span>
                                     </div>
-                                    <div class="Answerpart_right"></div>
+                                    <div class="Answerpart_right">
+										<textarea name="name" rows="5" cols="45"></textarea>
+                                    </div>
                                     <div class="clear"></div>
                                 </div>
                                 <div class="Answerpart">
                                     <div class="Answerpart_left">
-                                        <p>C</p><span><input type="radio" /></span>
+                                        <p>C</p><span><input type="radio" name="question" value="2"/></span>
                                     </div>
-                                    <div class="Answerpart_right"></div>
+                                    <div class="Answerpart_right">
+										<textarea name="name" rows="5" cols="45"></textarea>
+                                    </div>
                                     <div class="clear"></div>
                                 </div>
                                 <div class="Answerpart">
                                     <div class="Answerpart_left">
-                                        <p>D</p><span><input type="radio" /></span>
+                                        <p>D</p><span><input type="radio" name="question"  value="3"/></span>
                                     </div>
-                                    <div class="Answerpart_right"></div>
+                                    <div class="Answerpart_right">
+										<textarea name="name" rows="5" cols="45"></textarea>
+                                    </div>
                                     <div class="clear"></div>
                                 </div>
                                   <div class="clear"></div>
@@ -193,20 +271,12 @@
                         </div>
                         <div class="Problem">
                             <div class="Attributetit">答案解析</div>
-                            <div class="Problemcontent"></div>
+                            <div class="Problemcontent">
+								<!-- 增加一个文本域 -->
+                            	<textarea name="question_answer" rows="4" cols="80"></textarea>
+                            </div>
                         </div>
-                        <div class="Problem">
-                            <div class="fistproblm"><span>1.</span><a href="#"></a></div>
-                            <div class="Problemcontent"></div>
-                        </div>
-                        <div class="Problem">
-                            <div class="fistproblm"><span>1.</span><a href="#"></a></div>
-                            <div class="Problemcontent"></div>
-                        </div>
-                        <div class="Problem">
-                            <div class="fistproblm"><span>1.</span><a href="#"></a></div>
-                            <div class="Problemcontent"></div>
-                        </div>
+
                         <div class="btn_left">
                             <span class="btnL"><em class="btnR">保存并继续</em></span><span class="btnL"><em class="btnR">保存并关闭</em></span>
                         </div>

@@ -65,13 +65,35 @@ router.get('/checked', function(req, res, next) {
 });
 router.get('/unchecked', function(req, res, next) {
     var id=req.query.id;
-    
+
     examDB.unchecked(id).then((result)=>{
         res.send(result);
     }).catch((err)=>{
         console.log("笨蛋，错啦！！！")
     });
 });
-
+router.post('/saveSubject', function(req, res, next) {
+    var subjectTypeId=req.body.subjectTypeId;
+    var subjectLevelId=req.body.subjectLevelId;
+    var departmentId=req.body.departmentId;
+    var topicId=req.body.topicId;
+    var stem=req.body.stem;
+    var answer=req.body.answer;
+    examDB.saveSubject(subjectTypeId,subjectLevelId,departmentId,topicId,stem,answer).then((result)=>{
+        res.send(result);
+    }).catch((err)=>{
+        console.log("笨蛋，错！！！")
+    });
+});
+router.post('/saveAnswer', function(req, res, next) {
+    var choiceContent = req.body.choiceContent;
+    var choiceCorrect =req.body.choiceCorrect;
+    var subject_id =req.body.subject_id;
+    examDB.saveAnswer(choiceContent,choiceCorrect,subject_id).then((result)=>{
+        res.send(result);
+    }).catch((err)=>{
+        console.log("笨蛋，错le！！！")
+    });
+});
 
 module.exports = router;

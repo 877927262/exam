@@ -37,10 +37,30 @@ function checked(id){
 }
 //审核不通过
 function unchecked(id){
-let sql="update tbl_exam_subject set checkState ='审核不通过' where id="+id;
+    let sql="update tbl_exam_subject set checkState ='审核不通过' where id="+id;
     return changeDB(sql);
 }
+//保存题目
+function saveSubject(subjectTypeId,subjectLevelId,departmentId,topicId,stem,answer){
+    let sql = "insert tbl_exam_subject(subjectType_id,subjectLevel_id,department_id,topic_id,stem,answer) values("+subjectTypeId+","+subjectLevelId+","+departmentId+","+topicId+",'"+stem+"','"+answer+"')";
+    return changeDB(sql);
 
+}
+//保存答案
+function saveAnswer(choiceContent,choiceCorrect,subject_id){
+    for (var i = 0;i < choiceContent.length ; i++){
+        var sql1 = "insert tbl_exam_choice(content,correct,subject_id) values('"+choiceContent[i]+"',"+choiceCorrect[i]+","+subject_id+")";
+        if(i==3){
+            return changeDB(sql1);
+        }
+        else {
+            changeDB(sql1);
+        }
+
+    }
+
+
+}
 
 //操作数据库
 function changeDB(sql){
@@ -55,7 +75,7 @@ function changeDB(sql){
                 else{
                     reject(err);
                     connection.release();
-                    
+
                 }
             })
         }).catch((err)=>{
@@ -76,6 +96,8 @@ module.exports={
     showSubject,
     showAnswer,
     checked,
-    unchecked
-}
+    unchecked,
+    saveSubject,
+    saveAnswer
 
+}
