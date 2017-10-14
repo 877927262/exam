@@ -138,15 +138,20 @@
 						subject_id:data.insertId
 
 					}
-					$.ajax({
-						url : "http://127.0.0.1:3000/exam/manager/saveAnswer",
-						method : "post",
-						data :JSON.stringify(answerDatas) ,
-						contentType : "application/json",
-						success : function(data){
-							location.reload();
-						}
-					})
+					//当添加的题目为简答题的时候，不需要添加答案
+					if($('select[name=subjectType]').val()!=3)
+					{
+						$.ajax({
+							url : "http://127.0.0.1:3000/exam/manager/saveAnswer",
+							method : "post",
+							data :JSON.stringify(answerDatas) ,
+							contentType : "application/json",
+							success : function(data){
+							}
+						})
+					}
+					location.reload();
+					
 				}
 			});
 

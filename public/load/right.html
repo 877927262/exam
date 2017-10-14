@@ -173,6 +173,17 @@
 
                             })
                         })
+                        //点击删除，删除题目和答案
+                        $('.Catalogcontentdown a:nth-of-type(3)').on('click',function(){
+                            var id=$(this).attr("check");
+                            $.getJSON("http://127.0.0.1:3000/exam/manager/delSubject",{id:id},function(){
+                                //将题目全部清除
+                                $('.Catalogtitle ~ div').remove();
+                                //再次加载题目
+                                getSubjectId(getAswer);
+
+                            })
+                        })
 
 
                         handler(subjectid,index);
@@ -181,9 +192,8 @@
 
                 })
             }
-
-            //根据题目显示答案
-            getSubjectId(function(subjectid,ind){
+            //将回调函数封装
+            function getAswer(subjectid,ind){
                 // console.log(subjectid);
                 $.getJSON("http://127.0.0.1:3000/exam/manager/showAnswer",{
                         subjectid:subjectid
@@ -199,7 +209,10 @@
                             }
                         })
                 })
-            });
+
+            }
+            //根据题目显示答案
+            getSubjectId(getAswer);
 
 
         })

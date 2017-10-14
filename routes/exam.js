@@ -72,6 +72,15 @@ router.get('/unchecked', function(req, res, next) {
         console.log("笨蛋，错啦！！！")
     });
 });
+router.get('/delSubject', function(req, res, next) {
+    var id=req.query.id;
+
+    examDB.delSubject(id).then((result)=>{
+        res.send(result);
+    }).catch((err)=>{
+        console.log("笨蛋，错啦！！！")
+    });
+});
 router.post('/saveSubject', function(req, res, next) {
     var subjectTypeId=req.body.subjectTypeId;
     var subjectLevelId=req.body.subjectLevelId;

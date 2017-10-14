@@ -40,6 +40,13 @@ function unchecked(id){
     let sql="update tbl_exam_subject set checkState ='审核不通过' where id="+id;
     return changeDB(sql);
 }
+//删除题目
+function delSubject(id){
+    let sql="delete from tbl_exam_subject where id="+id;
+    changeDB(sql);
+    let sql1="delete from tbl_exam_choice where subject_id="+id;
+    return changeDB(sql1);
+}
 //保存题目
 function saveSubject(subjectTypeId,subjectLevelId,departmentId,topicId,stem,answer){
     let sql = "insert tbl_exam_subject(subjectType_id,subjectLevel_id,department_id,topic_id,stem,answer) values("+subjectTypeId+","+subjectLevelId+","+departmentId+","+topicId+",'"+stem+"','"+answer+"')";
@@ -97,6 +104,7 @@ module.exports={
     showAnswer,
     checked,
     unchecked,
+    delSubject,
     saveSubject,
     saveAnswer
 
